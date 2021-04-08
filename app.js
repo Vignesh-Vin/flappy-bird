@@ -7,12 +7,12 @@ let centerX = canvas.width / 2
 let centerY = canvas.height / 2
 
 let pipeGap = 200
-let pipeWidth = 50
+let pipeWidth = 70
 
 let bird = {
-	x: 300,
+	x: centerX,
 	y: centerY,
-	radius: 10,
+	radius: 20,
 	speed: 3,
 	gravity: 0.5,
 	maxSpeed: 8,
@@ -75,6 +75,9 @@ function animate() {
 	ctx.fillStyle = "#000000"
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+	//draw the bird
+	bird.update()
+
 	// draw pipes
 	pipes.forEach((pipe, i) => {
 		pipe.update()
@@ -82,24 +85,14 @@ function animate() {
 			pipes.splice(i, 1)
 		}
 
-		ctx.strokeStyle = "red"
-		ctx.beginPath()
-		ctx.moveTo(bird.x, bird.y)
-		ctx.lineTo(pipe.x, pipe.y)
-		ctx.stroke()
-
 		// check if the bird is touching the pipes
-		if(pipe.x <= (bird.x - bird.radius) && pipe.x + pipeWidth >= bird.x + bird.radius) {
-			//console.log("inside a pipe width")
-			if((bird.y - bird.radius) <= pipe.x || bird.y + bird.radius >= pipe.y + pipeGap) {
-				console.log("game over")
+		if(bird.x > pipe.x && bird.x < pipe.x + pipeWidth) {
+			if(bird.y < pipe.y || bird.y > pipe.y + pipeGap) {
+				console.log("Gameover zone")
 				resetGame()
 			}
 		}
 	})
-	//draw the bird
-	bird.update()
-
 }
 // Calling the animate function
 animate()
@@ -111,4 +104,12 @@ function resetGame() {
 // Misc. functions
 function randomBetween(min, max){
 return (Math.random() * (max - min) + min);
+}
+
+function debugLine(x1, y1, x2, y2) {
+	ctx.strokeStyle = "red"
+	ctx.beginPath()
+	ctx.moveTo(x1, y1)
+	ctx.lineTo(x2, y2)
+	ctx.stroke()
 }
