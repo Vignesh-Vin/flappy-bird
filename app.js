@@ -8,6 +8,16 @@ let centerY = canvas.height / 2
 
 let pipeGap = 200
 let pipeWidth = 70
+let gameRunning = false
+
+const birdImg = new Image()
+birdImg.src = "./bird.png"
+
+const pipeBottomImg = new Image()
+pipeBottomImg.src = "./pipeBottom.png"
+
+const pipeTopImg = new Image()
+pipeTopImg.src = "./pipeTop.png"
 
 let bird = {
 	x: centerX,
@@ -23,7 +33,7 @@ let bird = {
 		ctx.fill()
 	},
 	update: function() {
-		this.draw()
+		//this.draw()
 		if(this.speed <= this.maxSpeed) this.speed += this.gravity
 		this.y += this.speed
 	}
@@ -39,11 +49,13 @@ class Pipe {
 		ctx.beginPath()
 		ctx.fillRect(this.x, 0, pipeWidth, this.y)
 		ctx.fill()
+		ctx.drawImage(pipeTopImg, this.x, this.y - 500)
 	}
 	drawBottom() {
 		ctx.beginPath()
 		ctx.fillRect(this.x, this.y + pipeGap, pipeWidth, canvas.height)
 		ctx.fill()
+		ctx.drawImage(pipeBottomImg, this.x, this.y + pipeGap)
 
 	}
 	update() {
@@ -70,12 +82,14 @@ setInterval(() => {
 }, 2000)
 
 function animate() {
+	//if(!gameRunning) return
 	requestAnimationFrame(animate)
 	// Clear Canvas
 	ctx.fillStyle = "#000000"
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 	//draw the bird
+	ctx.drawImage(birdImg, bird.x  - bird.radius, bird.y - bird.radius )
 	bird.update()
 
 	// draw pipes
@@ -86,8 +100,8 @@ function animate() {
 		}
 
 		// check if the bird is touching the pipes
-		if(bird.x > pipe.x && bird.x < pipe.x + pipeWidth) {
-			if(bird.y < pipe.y || bird.y > pipe.y + pipeGap) {
+		if(bird.x + bird.radius > pipe.x && bird.x - bird.radius < pipe.x + pipeWidth) {
+			if(bird.y - bird.radius < pipe.y || bird.y + bird.radius > pipe.y + pipeGap) {
 				console.log("Gameover zone")
 				resetGame()
 			}
@@ -96,6 +110,7 @@ function animate() {
 }
 // Calling the animate function
 animate()
+
 
 function resetGame() {
 	pipes = []
