@@ -6,18 +6,19 @@ ctx = canvas.getContext("2d", {alpha: false})
 let centerX = canvas.width / 2
 let centerY = canvas.height / 2
 
-let pipeGap = 200
+let pipeGap = 220
 let pipeWidth = 70
 let gameRunning = false
 
 const birdImg = new Image()
 birdImg.src = "./bird.png"
 
+const pipeTopImg = new Image()
+pipeTopImg.src = "./pipeTop.png"
+
 const pipeBottomImg = new Image()
 pipeBottomImg.src = "./pipeBottom.png"
 
-const pipeTopImg = new Image()
-pipeTopImg.src = "./pipeTop.png"
 
 let bird = {
 	x: centerX,
@@ -49,13 +50,13 @@ class Pipe {
 		ctx.beginPath()
 		ctx.fillRect(this.x, 0, pipeWidth, this.y)
 		ctx.fill()
-		ctx.drawImage(pipeTopImg, this.x, this.y - 500)
+		ctx.drawImage(pipeTopImg, this.x, this.y - 1000, pipeWidth, 1000)
 	}
 	drawBottom() {
 		ctx.beginPath()
 		ctx.fillRect(this.x, this.y + pipeGap, pipeWidth, canvas.height)
 		ctx.fill()
-		ctx.drawImage(pipeBottomImg, this.x, this.y + pipeGap)
+		ctx.drawImage(pipeBottomImg, this.x, this.y + pipeGap, pipeWidth, 1000)
 
 	}
 	update() {
@@ -82,7 +83,6 @@ setInterval(() => {
 }, 2000)
 
 function animate() {
-	//if(!gameRunning) return
 	requestAnimationFrame(animate)
 	// Clear Canvas
 	ctx.fillStyle = "#000000"
