@@ -1,7 +1,7 @@
 canvas = document.querySelector("canvas")
 canvas.width = innerWidth
 canvas.height = innerHeight
-ctx = canvas.getContext("2d", {alpha: false})
+ctx = canvas.getContext("2d")
 
 let centerX = canvas.width / 2
 let centerY = canvas.height / 2
@@ -9,15 +9,11 @@ let centerY = canvas.height / 2
 let pipeGap = 220
 let pipeWidth = 70
 let gameRunning = false
+let inFocus = true
 
-const birdImg = new Image()
-birdImg.src = "./bird.png"
 
-const pipeTopImg = new Image()
-pipeTopImg.src = "./pipeTop.png"
-
-const pipeBottomImg = new Image()
-pipeBottomImg.src = "./pipeBottom.png"
+const sprites = new Image()
+sprites.src = "./sprites.png"
 
 
 let bird = {
@@ -34,6 +30,8 @@ let bird = {
 		ctx.fill()
 	},
 	update: function() {
+		if (this.y >= canvas.height || this.y <= -20) gameOver()
+		ctx.drawImage(sprites, 2 * pipeWidth, 0, 50, 35, bird.x - 25, bird.y - 20, 50, 40)
 		//this.draw()
 		if(this.speed <= this.maxSpeed) this.speed += this.gravity
 		this.y += this.speed
@@ -46,18 +44,10 @@ class Pipe {
 		this.x = canvas.width
 	}
 	draw() {
-		ctx.fillStyle = "blue"
-		ctx.beginPath()
-		ctx.fillRect(this.x, 0, pipeWidth, this.y)
-		ctx.fill()
-		ctx.drawImage(pipeTopImg, this.x, this.y - 1000, pipeWidth, 1000)
+		ctx.drawImage(sprites, pipeWidth, 0, pipeWidth, 1000, this.x, this.y - 1000, pipeWidth, 1000)
 	}
 	drawBottom() {
-		ctx.beginPath()
-		ctx.fillRect(this.x, this.y + pipeGap, pipeWidth, canvas.height)
-		ctx.fill()
-		ctx.drawImage(pipeBottomImg, this.x, this.y + pipeGap, pipeWidth, 1000)
-
+		ctx.drawImage(sprites, 0, 0, pipeWidth, 1000, this.x, this.y + pipeGap, pipeWidth, 1000)
 	}
 	update() {
 		this.draw()
@@ -67,11 +57,16 @@ class Pipe {
 	}
 }
 
+bird.speed = 0
+bird.gravity = 0
+
 // event listeners for keypress and mouse click
 window.addEventListener("click", (e) => {
+	bird.gravity = 0.5
 	bird.speed = -11
 })
 window.addEventListener("keypress", (e) => {
+	bird.gravity = 0.5
 	bird.speed = -11
 })
 
@@ -79,18 +74,13 @@ pipes = []
 // Spawn pipes every one second
 setInterval(() => {
 	pipes.push(new Pipe(randomBetween(20, canvas.height - pipeGap)))
-	//console.log(pipes.length)
 }, 2000)
 
 function animate() {
 	requestAnimationFrame(animate)
 	// Clear Canvas
-	ctx.fillStyle = "#000000"
-	ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-	//draw the bird
-	ctx.drawImage(birdImg, bird.x  - bird.radius, bird.y - bird.radius )
-	bird.update()
+	//ctx.fillStyle = "#000000"
+	ctx.clearRect(0, 0, canvas.width, canvas.height)
 
 	// draw pipes
 	pipes.forEach((pipe, i) => {
@@ -103,19 +93,24 @@ function animate() {
 		if(bird.x + bird.radius > pipe.x && bird.x - bird.radius < pipe.x + pipeWidth) {
 			if(bird.y - bird.radius < pipe.y || bird.y + bird.radius > pipe.y + pipeGap) {
 				console.log("Gameover zone")
-				resetGame()
+				gameOver()
 			}
 		}
 	})
+	//draw the bird
+	bird.update()
 }
 // Calling the animate function
 animate()
 
-
-function resetGame() {
+function gameOver() {
+	alert("Game Over")
 	pipes = []
 	bird.y = centerY
+	bird.speed = 0
+	bird.gravity = 0
 }
+
 // Misc. functions
 function randomBetween(min, max){
 return (Math.random() * (max - min) + min);

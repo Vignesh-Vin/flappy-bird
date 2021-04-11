@@ -9,10 +9,23 @@
    height: 100%;
    padding: 0;
    margin: 0;
-   background-color: black
+}
+#bg-div {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	opacity: 1;
+	background-image: url('./bg.png');
+	background-size: cover;
+}
+canvas {
+	position: relative;
+	z-index: 5;
 }
 </style>
 <body>
+<div id="bg-div"></div>
 <canvas></canvas>
 </body>
 <script type="text/javascript" src="./app.js"></script>
