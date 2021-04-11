@@ -79,9 +79,10 @@ setInterval(() => {
 function animate() {
 	requestAnimationFrame(animate)
 	// Clear Canvas
-	//ctx.fillStyle = "#000000"
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+	//draw the bird
+	bird.update()
 	// draw pipes
 	pipes.forEach((pipe, i) => {
 		pipe.update()
@@ -97,8 +98,6 @@ function animate() {
 			}
 		}
 	})
-	//draw the bird
-	bird.update()
 }
 // Calling the animate function
 animate()
