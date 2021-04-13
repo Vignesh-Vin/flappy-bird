@@ -6,14 +6,14 @@ ctx = canvas.getContext("2d")
 let centerX = canvas.width / 2
 let centerY = canvas.height / 2
 
-let pipeGap = 220
-let pipeWidth = 70
+let pipeGap = 250
+let pipeWidth = 74
 let gameRunning = false
 let inFocus = true
 
 
 const sprites = new Image()
-sprites.src = "./sprites.png"
+sprites.src = "./sprites2.png"
 
 
 let bird = {
@@ -31,7 +31,7 @@ let bird = {
 	},
 	update: function() {
 		if (this.y >= canvas.height || this.y <= -20) gameOver()
-		ctx.drawImage(sprites, 2 * pipeWidth, 0, 50, 35, bird.x - 25, bird.y - 20, 50, 40)
+		ctx.drawImage(sprites, 2 * pipeWidth, 0, 50, 44, bird.x - 25, bird.y - 20, 50, 44)
 		//this.draw()
 		if(this.speed <= this.maxSpeed) this.speed += this.gravity
 		this.y += this.speed
@@ -42,12 +42,16 @@ class Pipe {
 	constructor(y) {
 		this.y = y
 		this.x = canvas.width
+		// pipe w = 74
+		// pipe h = 1004
+		// bird w = 50
+		// bird h = 44
 	}
 	draw() {
-		ctx.drawImage(sprites, pipeWidth, 0, pipeWidth, 1000, this.x, this.y - 1000, pipeWidth, 1000)
+		ctx.drawImage(sprites, pipeWidth, 0, pipeWidth, 1004, this.x, this.y - 1004, pipeWidth, 1004)
 	}
 	drawBottom() {
-		ctx.drawImage(sprites, 0, 0, pipeWidth, 1000, this.x, this.y + pipeGap, pipeWidth, 1000)
+		ctx.drawImage(sprites, 0, 0, pipeWidth, 1004, this.x, this.y + pipeGap, pipeWidth, 1004)
 	}
 	update() {
 		this.draw()
@@ -74,7 +78,7 @@ pipes = []
 // Spawn pipes every one second
 setInterval(() => {
 	pipes.push(new Pipe(randomBetween(20, canvas.height - pipeGap)))
-}, 2000)
+}, 3000)
 
 function animate() {
 	requestAnimationFrame(animate)
